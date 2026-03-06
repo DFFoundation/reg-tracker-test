@@ -28,7 +28,7 @@ jobs:
 
       - name: Inject API token
         run: |
-          sed -i "s|%%AIRTABLE_API_TOKEN%%|${{ secrets.AIRTABLE_API_TOKEN }}|g" oira-tracker-v2.html
+          sed -i "s|%%AIRTABLE_API_TOKEN%%|${{ secrets.AIRTABLE_API_TOKEN }}|g" index.html
 
       - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v3
