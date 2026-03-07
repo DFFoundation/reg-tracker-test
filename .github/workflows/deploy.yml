@@ -2,8 +2,8 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main, performance-optimizations ]
-    
+    branches:
+      - main
   workflow_dispatch:  # allows manual trigger from GitHub UI
 
 permissions:
