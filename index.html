@@ -277,7 +277,10 @@ function fmtDate(d) {
 }
 
 // ── FETCH ──────────────────────────────────────────────────────────
-async function fetchAllRecords(apiKey, baseId, tableName) {
+async function fetchAllRecords(apiKey, baseId, tableName, filterFormula) {
+  const params = filterFormula
+    ? `?filterByFormula=${encodeURIComponent(filterFormula)}`
+    : '';
   const base    = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`;
   const headers = { Authorization: `Bearer ${apiKey}` };
 
@@ -295,11 +298,13 @@ async function fetchAllRecords(apiKey, baseId, tableName) {
     return res.json();
   }
 
-  const first = await getPage(base);
+  const first = await getPage(base + params);
   let records = first.records || [];
   let offset  = first.offset  || null;
   while (offset) {
-    const page = await getPage(`${base}?offset=${offset}`);
+    // Subsequent pages use offset — append to base+params
+    const sep = params ? '&' : '?';
+    const page = await getPage(base + params + sep + `offset=${offset}`);
     records = records.concat(page.records || []);
     offset  = page.offset || null;
   }
@@ -327,8 +332,8 @@ async function loadData() {
   try {
     // Fetch both tables in parallel — cuts network wait in half
     const [rawOira, rawCfr] = await Promise.all([
-      fetchAllRecords(apiKey, baseId, oiraTable),
-      fetchAllRecords(apiKey, baseId, cfrTable)
+      fetchAllRecords(apiKey, baseId, oiraTable, '{*OIRA Dashboard}=1'),
+      fetchAllRecords(apiKey, baseId, cfrTable, 'AND({*Dashboard}=1,{*Dashboard - Issue}!="Meeting")')
     ]);
 
     const today        = new Date(); today.setHours(0,0,0,0);
