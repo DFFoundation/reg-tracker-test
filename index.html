@@ -175,6 +175,12 @@
       <option value="">All agencies</option>
     </select>
   </div>
+  <div class="filter-group">
+    <span class="filter-label">Issue</span>
+    <select class="filter-select" id="issueFilter" onchange="applyFilters()">
+      <option value="">All issue areas</option>
+    </select>
+  </div>
   <div class="filter-group--search">
     <span style="color:var(--text-tertiary);font-size:14px">&#9013;</span>
     <input class="search-input" id="searchInput" type="text" placeholder="Search" oninput="debouncedFilter()">
@@ -196,13 +202,13 @@
         <div class="panel-timeline">
           <div class="panel-tl-track"></div>
           <div class="panel-tl-step">
-            <div class="panel-tl-pip" style="background:#60a5fa"></div>
+            <div class="panel-tl-pip" style="background:var(--c1)"></div>
             <div class="panel-tl-label">Under Review</div>
             <div class="panel-tl-desc">currently under review by OIRA</div>
           </div>
           <div class="panel-tl-arrow"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h9M8 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="panel-tl-step">
-            <div class="panel-tl-pip" style="background:#4ade80"></div>
+            <div class="panel-tl-pip" style="background:var(--c2)"></div>
             <div class="panel-tl-label">Completed Review</div>
             <div class="panel-tl-desc">completed OIRA review</div>
           </div>
@@ -220,19 +226,19 @@
         <div class="panel-timeline">
           <div class="panel-tl-track"></div>
           <div class="panel-tl-step">
-            <div class="panel-tl-pip" style="background:#f59e0b"></div>
+            <div class="panel-tl-pip" style="background:var(--c3)"></div>
             <div class="panel-tl-label">Comment Period Open</div>
             <div class="panel-tl-desc">open for public comment</div>
           </div>
           <div class="panel-tl-arrow"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h9M8 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="panel-tl-step" style="align-items:center;text-align:center">
-            <div class="panel-tl-pip" style="background:#a855f7"></div>
+            <div class="panel-tl-pip" style="background:var(--c4)"></div>
             <div class="panel-tl-label">Comment Period Closed</div>
             <div class="panel-tl-desc">pending final action</div>
           </div>
           <div class="panel-tl-arrow"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h9M8 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="panel-tl-step">
-            <div class="panel-tl-pip" style="background:#60a5fa"></div>
+            <div class="panel-tl-pip" style="background:var(--c5)"></div>
             <div class="panel-tl-label">Final Rules &amp; Notices</div>
             <div class="panel-tl-desc">published in the Federal Register</div>
           </div>
@@ -418,16 +424,21 @@ function populateFilters() {
     if (i) issues.add(i);
   }
   const ag = document.getElementById('agencyFilter');
+  const is = document.getElementById('issueFilter');
   ag.innerHTML = '<option value="">All agencies</option>' +
     [...agencies].sort().map(a => `<option value="${esc(a)}">${esc(a)}</option>`).join('');
+  is.innerHTML = '<option value="">All issue areas</option>' +
+    [...issues].sort().map(i => `<option value="${esc(i)}">${esc(i)}</option>`).join('');
 }
 
 function applyFilters() {
   const agency = document.getElementById('agencyFilter').value;
+  const issue  = document.getElementById('issueFilter').value;
   const search = document.getElementById('searchInput').value.toLowerCase().trim();
 
   filteredRecords = allRecords.filter(r => {
     if (agency && (r['Parent Agency'] || '') !== agency) return false;
+    if (issue  && (r['Issue (OIRA Dashboard)'] || '') !== issue) return false;
     if (search) {
       if (!r._st) r._st = ((r['TITLE'] || '') + ' ' + (r['abstract'] || '')).toLowerCase();
       if (!r._st.includes(search)) return false;
@@ -437,6 +448,7 @@ function applyFilters() {
 
   const fc = arr => arr.filter(r => {
     if (agency && (r['agency_names'] || '') !== agency) return false;
+    if (issue  && (r['*Dashboard - Issue'] || '') !== issue) return false;
     if (search) {
       if (!r._st) r._st = ((r['title'] || '') + ' ' + (r['abstract'] || '')).toLowerCase();
       if (!r._st.includes(search)) return false;
@@ -451,6 +463,7 @@ function applyFilters() {
 
 function clearFilters() {
   document.getElementById('agencyFilter').value = '';
+  document.getElementById('issueFilter').value  = '';
   document.getElementById('searchInput').value  = '';
   applyFilters();
 }
@@ -471,8 +484,9 @@ function renderBoard() {
   const today    = new Date(); today.setHours(0,0,0,0);
   const yest     = new Date(today); yest.setDate(today.getDate() - 1);
   const agency   = document.getElementById('agencyFilter').value;
+  const issue    = document.getElementById('issueFilter').value;
   const search   = document.getElementById('searchInput').value.trim();
-  const active   = !!(agency || search);
+  const active   = !!(agency || issue || search);
 
   const under = filteredRecords.filter(r => (r['OIRA_STATUS']||'').trim() === 'Under Review')
     .sort((a,b) => parseDate(b['DATE_RECEIVED']) - parseDate(a['DATE_RECEIVED']));
