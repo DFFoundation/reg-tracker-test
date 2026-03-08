@@ -114,6 +114,7 @@
   .days-pill.under-review,.days-pill.under-review.long{background:#e8edf8;color:#1e3a6e}
   .days-pill.since-complete{background:#e2f0e8;color:#2a5e3f}
   .days-pill.comments-close{background:#fdeee6;color:#9a3a1a}
+  .days-pill.pill-closed{background:#ede8f5;color:#5b21a8}
   .empty-col{padding:40px 16px;text-align:center;color:var(--text-tertiary);font-size:13px}
   .rest-divider{display:flex;align-items:center;gap:10px;margin:12px 0 8px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-tertiary)}
   .rest-divider::before,.rest-divider::after{content:'';flex:1;height:1px;background:var(--border)}
@@ -182,7 +183,7 @@
     </select>
   </div>
   <div class="filter-group--search">
-    <span style="color:var(--text-tertiary);font-size:14px">&#9013;</span>
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-tertiary);flex-shrink:0"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
     <input class="search-input" id="searchInput" type="text" placeholder="Search" oninput="debouncedFilter()">
   </div>
   <span class="record-count" id="recordCount"></span>
@@ -575,7 +576,7 @@ function oiraCard(r, type) {
   const completed = fmtDate(r['DATE_COMPLETED']);
   const du        = r['Days Under Review'];
   const ds        = r['Days Since Review Completed'] ?? r['Days Since Completed Review'];
-  const accent    = type === 'under' ? '#163d62' : '#2e7d5e';
+  const accent    = type === 'under' ? 'var(--c1)' : 'var(--c2)';
 
   let pill = '';
   if (type === 'under' && du != null)
@@ -610,8 +611,8 @@ function cfrCard(r, type) {
   const docType = esc(r['type'] || '');
   const pub     = fmtDate(r['publication_date']);
   const closeStr= fmtDate(r['comments_close_on']);
-  const accents = { open:'#b45309', closed:'#6b21a8', final:'#1e3a5f' };
-  const accent  = accents[type] || '#1e3a5f';
+  const accents = { open:'var(--c3)', closed:'var(--c4)', final:'var(--c5)' };
+  const accent  = accents[type] || 'var(--c5)';
 
   // Doc-type badge class
   const typeNorm = (docType||'').toLowerCase();
@@ -620,13 +621,18 @@ function cfrCard(r, type) {
                  : typeNorm.includes('interim')  ? 'badge-interim'
                  : 'badge-notice';
 
-  // Days until comments close
+  // Days until/since comments close
   let closePill = '';
   if (type === 'open' && r['comments_close_on']) {
     const closeDate = parseDate(r['comments_close_on']);
     const today = new Date(); today.setHours(0,0,0,0);
     const daysLeft = Math.round((closeDate - today) / 86400000);
     closePill = `<div class="days-pill comments-close">${daysLeft} day${daysLeft !== 1 ? 's' : ''} until comments close</div>`;
+  } else if (type === 'closed' && r['comments_close_on']) {
+    const closeDate = parseDate(r['comments_close_on']);
+    const today = new Date(); today.setHours(0,0,0,0);
+    const daysAgo = Math.round((today - closeDate) / 86400000);
+    closePill = `<div class="days-pill pill-closed">Comments closed ${daysAgo} day${daysAgo !== 1 ? 's' : ''} ago</div>`;
   }
 
   const pubItem   = pub     ? `<div class="card-date-row"><span class="date-label">Published</span><span class="date-val">${pub}</span></div>` : '';
