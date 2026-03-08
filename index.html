@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -501,6 +502,10 @@ function renderBoard() {
   const totalA = allRecords.length + cfrRecords.open.length + cfrRecords.closed.length + cfrRecords.final.length;
   document.getElementById('recordCount').innerHTML = `<strong>${totalF}</strong> of <strong>${totalA}</strong> records shown`;
 
+  const elems = ['mainContent','oira-board','cfr-board','recordCount'];
+  for (const id of elems) {
+    if (!document.getElementById(id)) throw new Error('Missing DOM element: #' + id);
+  }
   document.getElementById('mainContent').innerHTML = '';
   document.getElementById('oira-board').innerHTML =
     col('under', 'under', 'var(--c1)', 'Under Review',     batches.under,  r => oiraCard(r, 'under')) +
