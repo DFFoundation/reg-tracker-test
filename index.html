@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -95,11 +94,11 @@
   .card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0;cursor:pointer;position:relative;overflow:hidden;transition:box-shadow .18s,border-color .18s,transform .14s;box-shadow:0 1px 4px rgba(19,36,72,.07);margin-bottom:10px;will-change:transform;display:flex;flex-direction:column}
   .card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--col-accent,var(--df-green));border-radius:6px 0 0 6px}
   .card:hover{box-shadow:0 4px 16px rgba(19,36,72,.13);border-color:var(--border-dark);transform:translateY(-1px)}
-  .card-inner{padding:14px 14px 12px 18px}
+  .card-inner{padding:14px 14px 12px 18px;display:flex;flex-direction:column;gap:5px}
   .card-agency-name{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#163d62;margin-bottom:6px;line-height:1.4;white-space:normal;word-break:break-word;overflow-wrap:break-word}
   .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
   .card-agency{display:none}
-  .card-type-badge{display:inline-flex;align-items:center;font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;align-self:flex-start;margin-top:1px}
+  .card-type-badge{display:inline-flex;align-items:center;font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;align-self:flex-start;margin-top:1px;margin-bottom:3px}
   .badge-proposed{background:var(--badge-proposed-bg);color:var(--badge-proposed-fg)}
   .badge-final{background:var(--badge-final-bg);color:var(--badge-final-fg)}
   .badge-notice{background:var(--badge-notice-bg);color:var(--badge-notice-fg)}
@@ -502,10 +501,6 @@ function renderBoard() {
   const totalA = allRecords.length + cfrRecords.open.length + cfrRecords.closed.length + cfrRecords.final.length;
   document.getElementById('recordCount').innerHTML = `<strong>${totalF}</strong> of <strong>${totalA}</strong> records shown`;
 
-  const elems = ['mainContent','oira-board','cfr-board','recordCount'];
-  for (const id of elems) {
-    if (!document.getElementById(id)) throw new Error('Missing DOM element: #' + id);
-  }
   document.getElementById('mainContent').innerHTML = '';
   document.getElementById('oira-board').innerHTML =
     col('under', 'under', 'var(--c1)', 'Under Review',     batches.under,  r => oiraCard(r, 'under')) +
@@ -567,14 +562,12 @@ function oiraCard(r, type) {
   return `<div class="card" style="--col-accent:${accent}" onclick="openModal('${r.id}')">
     <div class="card-inner">
       ${agency ? `<div class="card-agency-name">${agency}</div>` : ''}
-      <div class="card-top">
-        <div class="card-title">${title}</div>
-        ${stage ? `<div class="card-type-badge ${
-          stage.toLowerCase().includes('proposed') ? 'badge-proposed' :
-          stage.toLowerCase().includes('final') ? 'badge-final' :
-          stage.toLowerCase().includes('interim') ? 'badge-interim' : 'badge-notice'
-        }">${stage}</div>` : ''}
-      </div>
+      ${stage ? `<div class="card-type-badge ${
+        stage.toLowerCase().includes('proposed') ? 'badge-proposed' :
+        stage.toLowerCase().includes('final') ? 'badge-final' :
+        stage.toLowerCase().includes('interim') ? 'badge-interim' : 'badge-notice'
+      }">${stage}</div>` : ''}
+      <div class="card-title">${title}</div>
     </div>
     ${hasFooter ? `<div class="card-footer"><div class="card-dates">${dateItems}</div>${pill}</div>` : ''}
   </div>`;
@@ -612,10 +605,8 @@ function cfrCard(r, type) {
   return `<div class="card" style="--col-accent:${accent}" onclick="openCfrModal('${r.id}')">
     <div class="card-inner">
       ${agency ? `<div class="card-agency-name">${agency}</div>` : ''}
-      <div class="card-top">
-        <div class="card-title">${title}</div>
-        ${docType ? `<div class="card-type-badge ${badgeCls}">${docType}</div>` : ''}
-      </div>
+      ${docType ? `<div class="card-type-badge ${badgeCls}">${docType}</div>` : ''}
+      <div class="card-title">${title}</div>
     </div>
     ${hasFooter ? `<div class="card-footer"><div class="card-dates">${pubItem}${closeItem}</div>${closePill}</div>` : ''}
   </div>`;
