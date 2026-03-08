@@ -416,19 +416,35 @@ async function loadData() {
 // ── FILTERS ────────────────────────────────────────────────────────
 function populateFilters() {
   const all = [...allRecords, ...cfrRecords.open, ...cfrRecords.closed, ...cfrRecords.final];
-  const agencies = new Set(), issues = new Set();
+  const agency = document.getElementById('agencyFilter').value;
+  const issue  = document.getElementById('issueFilter').value;
+
+  // Agencies visible when filtered by current issue selection
+  const agencySet = new Set();
+  for (const r of all) {
+    const i = r['Issue (OIRA Dashboard)'] || r['*Dashboard - Issue'] || '';
+    if (!issue || i === issue) {
+      const a = r['Parent Agency'] || r['agency_names'] || '';
+      if (a) agencySet.add(a);
+    }
+  }
+
+  // Issues visible when filtered by current agency selection
+  const issueSet = new Set();
   for (const r of all) {
     const a = r['Parent Agency'] || r['agency_names'] || '';
-    const i = r['Issue (OIRA Dashboard)'] || r['*Dashboard - Issue'] || '';
-    if (a) agencies.add(a);
-    if (i) issues.add(i);
+    if (!agency || a === agency) {
+      const i = r['Issue (OIRA Dashboard)'] || r['*Dashboard - Issue'] || '';
+      if (i) issueSet.add(i);
+    }
   }
+
   const ag = document.getElementById('agencyFilter');
   const is = document.getElementById('issueFilter');
   ag.innerHTML = '<option value="">All agencies</option>' +
-    [...agencies].sort().map(a => `<option value="${esc(a)}">${esc(a)}</option>`).join('');
+    [...agencySet].sort().map(a => `<option value="${esc(a)}"${a === agency ? ' selected' : ''}>${esc(a)}</option>`).join('');
   is.innerHTML = '<option value="">All issue areas</option>' +
-    [...issues].sort().map(i => `<option value="${esc(i)}">${esc(i)}</option>`).join('');
+    [...issueSet].sort().map(i => `<option value="${esc(i)}"${i === issue ? ' selected' : ''}>${esc(i)}</option>`).join('');
 }
 
 function applyFilters() {
@@ -458,6 +474,7 @@ function applyFilters() {
 
   filteredCfr = { open: fc(cfrRecords.open), closed: fc(cfrRecords.closed), final: fc(cfrRecords.final) };
   Object.keys(colExpanded).forEach(k => colExpanded[k] = false);
+  populateFilters();
   renderBoard();
 }
 
