@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -621,22 +622,19 @@ function cfrCard(r, type) {
                  : typeNorm.includes('interim')  ? 'badge-interim'
                  : 'badge-notice';
 
-  // Days until/since comments close
+  // Days until comments close (open column only)
   let closePill = '';
   if (type === 'open' && r['comments_close_on']) {
     const closeDate = parseDate(r['comments_close_on']);
     const today = new Date(); today.setHours(0,0,0,0);
     const daysLeft = Math.round((closeDate - today) / 86400000);
     closePill = `<div class="days-pill comments-close">${daysLeft} day${daysLeft !== 1 ? 's' : ''} until comments close</div>`;
-  } else if (type === 'closed' && r['comments_close_on']) {
-    const closeDate = parseDate(r['comments_close_on']);
-    const today = new Date(); today.setHours(0,0,0,0);
-    const daysAgo = Math.round((today - closeDate) / 86400000);
-    closePill = `<div class="days-pill pill-closed">Comments closed ${daysAgo} day${daysAgo !== 1 ? 's' : ''} ago</div>`;
   }
 
+  const closeLabel = type === 'closed' ? 'Comments Closed' : 'Comments Close';
+
   const pubItem   = pub     ? `<div class="card-date-row"><span class="date-label">Published</span><span class="date-val">${pub}</span></div>` : '';
-  const closeItem = closeStr ? `<div class="card-date-row"><span class="date-label">Comments Close</span><span class="date-val">${closeStr}</span></div>` : '';
+  const closeItem = closeStr ? `<div class="card-date-row"><span class="date-label">${closeLabel}</span><span class="date-val">${closeStr}</span></div>` : '';
   const hasFooter = pubItem || closeItem || closePill;
 
   return `<div class="card" style="--col-accent:${accent}" onclick="openCfrModal('${r.id}')">
