@@ -418,21 +418,16 @@ function populateFilters() {
     if (i) issues.add(i);
   }
   const ag = document.getElementById('agencyFilter');
-  const is = document.getElementById('issueFilter');
   ag.innerHTML = '<option value="">All agencies</option>' +
     [...agencies].sort().map(a => `<option value="${esc(a)}">${esc(a)}</option>`).join('');
-  is.innerHTML = '<option value="">All issue areas</option>' +
-    [...issues].sort().map(i => `<option value="${esc(i)}">${esc(i)}</option>`).join('');
 }
 
 function applyFilters() {
   const agency = document.getElementById('agencyFilter').value;
-  const issue  = document.getElementById('issueFilter').value;
   const search = document.getElementById('searchInput').value.toLowerCase().trim();
 
   filteredRecords = allRecords.filter(r => {
     if (agency && (r['Parent Agency'] || '') !== agency) return false;
-    if (issue  && (r['Issue (OIRA Dashboard)'] || '') !== issue) return false;
     if (search) {
       if (!r._st) r._st = ((r['TITLE'] || '') + ' ' + (r['abstract'] || '')).toLowerCase();
       if (!r._st.includes(search)) return false;
@@ -442,7 +437,6 @@ function applyFilters() {
 
   const fc = arr => arr.filter(r => {
     if (agency && (r['agency_names'] || '') !== agency) return false;
-    if (issue  && (r['*Dashboard - Issue'] || '') !== issue) return false;
     if (search) {
       if (!r._st) r._st = ((r['title'] || '') + ' ' + (r['abstract'] || '')).toLowerCase();
       if (!r._st.includes(search)) return false;
@@ -457,7 +451,6 @@ function applyFilters() {
 
 function clearFilters() {
   document.getElementById('agencyFilter').value = '';
-  document.getElementById('issueFilter').value  = '';
   document.getElementById('searchInput').value  = '';
   applyFilters();
 }
@@ -478,9 +471,8 @@ function renderBoard() {
   const today    = new Date(); today.setHours(0,0,0,0);
   const yest     = new Date(today); yest.setDate(today.getDate() - 1);
   const agency   = document.getElementById('agencyFilter').value;
-  const issue    = document.getElementById('issueFilter').value;
   const search   = document.getElementById('searchInput').value.trim();
-  const active   = !!(agency || issue || search);
+  const active   = !!(agency || search);
 
   const under = filteredRecords.filter(r => (r['OIRA_STATUS']||'').trim() === 'Under Review')
     .sort((a,b) => parseDate(b['DATE_RECEIVED']) - parseDate(a['DATE_RECEIVED']));
