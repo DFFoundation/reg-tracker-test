@@ -535,7 +535,9 @@ const batches = {
 };
   const totalF = filteredRecords.length + filteredCfr.open.length + filteredCfr.closed.length + filteredCfr.final.length;
   const totalA = allRecords.length + cfrRecords.open.length + cfrRecords.closed.length + cfrRecords.final.length;
-  document.getElementById('recordCount').innerHTML = `<strong>${totalF}</strong> of <strong>${totalA}</strong> records shown`;
+  document.getElementById('recordCount').innerHTML = active
+  ? `<strong>${totalF}</strong> of <strong>${totalA}</strong> records shown`
+  : `<strong>${totalA}</strong> records`;
 
   document.getElementById('mainContent').innerHTML = '';
   document.getElementById('oira-board').innerHTML =
