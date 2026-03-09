@@ -344,7 +344,8 @@ async function loadData() {
   hideError();
   const btn = document.getElementById('loadBtn');
   btn.disabled = true; btn.textContent = 'Loading\u2026';
-  document.getElementById('toolbar').classList.remove('visible');
+  document.getElementById('toolbar').classList.add('visible');
+  document.getElementById('recordCount').innerHTML = '';
   document.getElementById('mainContent').innerHTML =
     '<div class="state-overlay"><div class="spinner"></div><div>Fetching records\u2026</div></div>';
 
