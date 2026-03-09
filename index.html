@@ -535,8 +535,12 @@ const batches = {
 };
   const totalF = filteredRecords.length + filteredCfr.open.length + filteredCfr.closed.length + filteredCfr.final.length;
   const totalA = allRecords.length + cfrRecords.open.length + cfrRecords.closed.length + cfrRecords.final.length;
-  document.getElementById('recordCount').innerHTML = active
+  const totalRecent = batches.under.recent.length + batches.done.recent.length +
+  batches.open.recent.length + batches.closed.recent.length + batches.final.recent.length;
+document.getElementById('recordCount').innerHTML = active
   ? `<strong>${totalF}</strong> of <strong>${totalA}</strong> records shown`
+  : totalRecent < totalA
+  ? `<strong>${totalRecent}</strong> of <strong>${totalA}</strong> records shown`
   : `<strong>${totalA}</strong> records`;
 
   document.getElementById('mainContent').innerHTML = '';
