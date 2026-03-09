@@ -522,7 +522,6 @@ function split(recs, field, cutoff) {
   return { recent, rest };
 }
 
-  const batches = {
 const oiraCutoff = today.getDay() === 1
   ? new Date(today.getFullYear(), today.getMonth(), today.getDate() - 3)
   : yest;
