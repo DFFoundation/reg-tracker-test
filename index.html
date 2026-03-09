@@ -512,20 +512,12 @@ function renderBoard() {
   const done  = filteredRecords.filter(r => (r['OIRA_STATUS']||'').trim() === 'Completed')
     .sort((a,b) => parseDate(b['DATE_COMPLETED']) - parseDate(a['DATE_COMPLETED']));
 
- function split(recs, field, cutoff) {
+function split(recs, field, cutoff) {
   if (active) return { recent: recs, rest: [] };
-  // On Mondays, treat Friday's records as "new"
-  const today = new Date(); today.setHours(0,0,0,0);
-  let effectiveCutoff = cutoff;
-  if (today.getDay() === 1) {
-    const friday = new Date(today);
-    friday.setDate(today.getDate() - 3);
-    effectiveCutoff = friday;
-  }
   const recent = [], rest = [];
   for (const r of recs) {
     const d = parseDate(r[field]);
-    (d && d >= effectiveCutoff ? recent : rest).push(r);
+    (d && d >= cutoff ? recent : rest).push(r);
   }
   return { recent, rest };
 }
@@ -534,13 +526,13 @@ function renderBoard() {
 const oiraCutoff = today.getDay() === 1
   ? new Date(today.getFullYear(), today.getMonth(), today.getDate() - 3)
   : yest;
-under:  split(under, 'DATE_RECEIVED',    oiraCutoff),
-done:   split(done,  'DATE_COMPLETED',   oiraCutoff),
-    open:   split(filteredCfr.open,   'publication_date', today),
-    closed: split(filteredCfr.closed, 'publication_date', today),
-    final:  split(filteredCfr.final,  'publication_date', today),
-  };
-
+const batches = {
+  under:  split(under, 'DATE_RECEIVED',    oiraCutoff),
+  done:   split(done,  'DATE_COMPLETED',   oiraCutoff),
+  open:   split(filteredCfr.open,   'publication_date', today),
+  closed: split(filteredCfr.closed, 'publication_date', today),
+  final:  split(filteredCfr.final,  'publication_date', today),
+};
   const totalF = filteredRecords.length + filteredCfr.open.length + filteredCfr.closed.length + filteredCfr.final.length;
   const totalA = allRecords.length + cfrRecords.open.length + cfrRecords.closed.length + cfrRecords.final.length;
   document.getElementById('recordCount').innerHTML = `<strong>${totalF}</strong> of <strong>${totalA}</strong> records shown`;
