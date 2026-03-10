@@ -44,13 +44,12 @@
   .search-input::placeholder{color:var(--text-tertiary)}
   .record-count{font-size:12px;color:var(--text-tertiary);white-space:nowrap;margin-left:auto}
   .record-count strong{color:var(--text-secondary);font-weight:600}
-  .filter-clear-btn{background:none;border:1px solid var(--border);border-radius:4px;color:var(--text-tertiary);font-family:'Inter',sans-serif;font-size:12px;padding:4px 10px;cursor:pointer;transition:all .15s}
-  .filter-clear-btn:hover{border-color:var(--border-dark);color:var(--text-secondary)}
   .toggle-mode{display:flex;background:#e2ede7;border:1px solid #bdd8c9;border-radius:6px;padding:3px;gap:2px;height:30px;align-items:center}
   .toggle-mode-btn{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:.03em;padding:0 12px;height:22px;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;transition:all .18s}
   .toggle-mode-btn.active{background:var(--df-green);color:#fff;box-shadow:0 1px 4px rgba(74,158,107,.35)}
   .toggle-mode-btn.inactive{background:transparent;color:#3d7d52}
   .toggle-mode-btn.inactive:hover{background:rgba(255,255,255,.6)}
+  .toggle-mode.filtered .toggle-mode-btn{opacity:.4;pointer-events:none}
   .error-box{background:#fdeaea;border:1px solid #f0c0c0;color:var(--red);padding:14px 22px;font-size:13px;margin:20px 36px;border-radius:4px;line-height:1.6;display:none}
   .state-overlay{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:50vh;gap:14px;color:var(--text-tertiary);font-size:13px}
   .spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--df-green);border-radius:50%;animation:spin .75s linear infinite}
@@ -189,7 +188,6 @@
     <input class="search-input" id="searchInput" type="text" placeholder="Search" oninput="debouncedFilter()">
   </div>
   <span class="record-count" id="recordCount"></span>
-  <button class="filter-clear-btn" onclick="clearFilters()">Clear</button>
 </div>
 
 <div id="errorBox" class="error-box"></div>
@@ -542,6 +540,7 @@ function renderBoard() {
   const totalRecent = batches.under.recent.length + batches.done.recent.length +
     batches.open.recent.length + batches.closed.recent.length + batches.final.recent.length;
 
+  document.getElementById('toolbar').querySelector('.toggle-mode').classList.toggle('filtered', active);
   document.getElementById('recordCount').innerHTML = active
     ? `<strong>${totalF}</strong> of <strong>${totalA}</strong> records shown`
     : (digestMode && totalRecent < totalA)
