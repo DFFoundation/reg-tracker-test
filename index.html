@@ -31,12 +31,9 @@
   .logo-divider{width:1px;height:18px;background:rgba(255,255,255,.2);flex-shrink:0}
   .header-updated{font-size:11px;font-weight:400;color:rgba(255,255,255,.45);letter-spacing:.02em;white-space:nowrap}
   .contact-btn{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);letter-spacing:.04em;text-transform:uppercase;text-decoration:none;border:1px solid rgba(255,255,255,.25);border-radius:4px;padding:4px 10px;white-space:nowrap;transition:all .15s}.contact-btn:hover{color:#fff;border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.08)}
-  
-<div class="header-updated" id="headerUpdated"></div>
-  <a class="contact-btn" href="mailto:rulemaking@democracyforward.org">Contact Us</a>
   .config-btn{background:var(--df-green);border:none;border-radius:4px;color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:6px 16px;cursor:pointer;letter-spacing:.03em;transition:background .15s;white-space:nowrap}
   .config-btn:hover{background:#256b50}.config-btn:disabled{opacity:.5;cursor:not-allowed}
-.toolbar{background:var(--surface);border-bottom:1px solid var(--border);padding:8px 36px;min-height:48px;display:none;align-items:center;flex-wrap:wrap;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .toolbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 36px;height:48px;display:none;align-items:center;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
   .toolbar.visible{display:flex}
   .filter-group{display:flex;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:0 8px;height:30px;transition:border-color .15s}
   .filter-group:hover{border-color:var(--border-dark)}
@@ -166,6 +163,7 @@
   <div class="header-title">Regulatory Activity Tracker</div>
   <div class="logo-divider"></div>
   <div class="header-updated" id="headerUpdated"></div>
+  <a class="contact-btn" href="mailto:rulemaking@democracyforward.org">Contact Us</a>
   <button class="config-btn" id="loadBtn" onclick="loadData()">&#8635; Refresh</button>
 </div>
 
