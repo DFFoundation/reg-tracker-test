@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,11 +95,11 @@
   .card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0;cursor:pointer;position:relative;overflow:hidden;transition:box-shadow .18s,border-color .18s,transform .14s;box-shadow:0 1px 4px rgba(19,36,72,.07);margin-bottom:10px;will-change:transform;display:flex;flex-direction:column}
   .card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--col-accent,var(--df-green));border-radius:6px 0 0 6px}
   .card:hover{box-shadow:0 4px 16px rgba(19,36,72,.13);border-color:var(--border-dark);transform:translateY(-1px)}
-  .card-inner{padding:14px 14px 12px 18px}
+  .card-inner{padding:14px 14px 12px 18px;display:flex;flex-direction:column;gap:5px}
   .card-agency-name{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#163d62;margin-bottom:6px;line-height:1.4;white-space:normal;word-break:break-word;overflow-wrap:break-word}
   .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
   .card-agency{display:none}
-  .card-type-badge{display:inline-flex;align-items:center;font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;align-self:flex-start;margin-top:1px}
+  .card-type-badge{display:inline-flex;align-items:center;font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;align-self:flex-start;margin-top:1px;margin-bottom:3px}
   .badge-proposed{background:var(--badge-proposed-bg);color:var(--badge-proposed-fg)}
   .badge-final{background:var(--badge-final-bg);color:var(--badge-final-fg)}
   .badge-notice{background:var(--badge-notice-bg);color:var(--badge-notice-fg)}
@@ -114,6 +115,7 @@
   .days-pill.under-review,.days-pill.under-review.long{background:#e8edf8;color:#1e3a6e}
   .days-pill.since-complete{background:#e2f0e8;color:#2a5e3f}
   .days-pill.comments-close{background:#fdeee6;color:#9a3a1a}
+  .days-pill.pill-closed{background:#ede8f5;color:#5b21a8}
   .empty-col{padding:40px 16px;text-align:center;color:var(--text-tertiary);font-size:13px}
   .rest-divider{display:flex;align-items:center;gap:10px;margin:12px 0 8px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-tertiary)}
   .rest-divider::before,.rest-divider::after{content:'';flex:1;height:1px;background:var(--border)}
@@ -175,8 +177,14 @@
       <option value="">All agencies</option>
     </select>
   </div>
+  <div class="filter-group">
+    <span class="filter-label">Issue</span>
+    <select class="filter-select" id="issueFilter" onchange="applyFilters()">
+      <option value="">All issue areas</option>
+    </select>
+  </div>
   <div class="filter-group--search">
-    <span style="color:var(--text-tertiary);font-size:14px">&#9013;</span>
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-tertiary);flex-shrink:0"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
     <input class="search-input" id="searchInput" type="text" placeholder="Search" oninput="debouncedFilter()">
   </div>
   <span class="record-count" id="recordCount"></span>
@@ -196,13 +204,13 @@
         <div class="panel-timeline">
           <div class="panel-tl-track"></div>
           <div class="panel-tl-step">
-            <div class="panel-tl-pip" style="background:#60a5fa"></div>
+            <div class="panel-tl-pip" style="background:var(--c1)"></div>
             <div class="panel-tl-label">Under Review</div>
             <div class="panel-tl-desc">currently under review by OIRA</div>
           </div>
           <div class="panel-tl-arrow"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h9M8 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="panel-tl-step">
-            <div class="panel-tl-pip" style="background:#4ade80"></div>
+            <div class="panel-tl-pip" style="background:var(--c2)"></div>
             <div class="panel-tl-label">Completed Review</div>
             <div class="panel-tl-desc">completed OIRA review</div>
           </div>
@@ -220,19 +228,19 @@
         <div class="panel-timeline">
           <div class="panel-tl-track"></div>
           <div class="panel-tl-step">
-            <div class="panel-tl-pip" style="background:#f59e0b"></div>
+            <div class="panel-tl-pip" style="background:var(--c3)"></div>
             <div class="panel-tl-label">Comment Period Open</div>
             <div class="panel-tl-desc">open for public comment</div>
           </div>
           <div class="panel-tl-arrow"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h9M8 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="panel-tl-step" style="align-items:center;text-align:center">
-            <div class="panel-tl-pip" style="background:#a855f7"></div>
+            <div class="panel-tl-pip" style="background:var(--c4)"></div>
             <div class="panel-tl-label">Comment Period Closed</div>
             <div class="panel-tl-desc">pending final action</div>
           </div>
           <div class="panel-tl-arrow"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h9M8 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="panel-tl-step">
-            <div class="panel-tl-pip" style="background:#60a5fa"></div>
+            <div class="panel-tl-pip" style="background:var(--c5)"></div>
             <div class="panel-tl-label">Final Rules &amp; Notices</div>
             <div class="panel-tl-desc">published in the Federal Register</div>
           </div>
@@ -336,7 +344,8 @@ async function loadData() {
   hideError();
   const btn = document.getElementById('loadBtn');
   btn.disabled = true; btn.textContent = 'Loading\u2026';
-  document.getElementById('toolbar').classList.remove('visible');
+  document.getElementById('toolbar').classList.add('visible');
+  document.getElementById('recordCount').innerHTML = '';
   document.getElementById('mainContent').innerHTML =
     '<div class="state-overlay"><div class="spinner"></div><div>Fetching records\u2026</div></div>';
 
@@ -410,19 +419,35 @@ async function loadData() {
 // ── FILTERS ────────────────────────────────────────────────────────
 function populateFilters() {
   const all = [...allRecords, ...cfrRecords.open, ...cfrRecords.closed, ...cfrRecords.final];
-  const agencies = new Set(), issues = new Set();
+  const agency = document.getElementById('agencyFilter').value;
+  const issue  = document.getElementById('issueFilter').value;
+
+  // Agencies visible when filtered by current issue selection
+  const agencySet = new Set();
+  for (const r of all) {
+    const i = r['Issue (OIRA Dashboard)'] || r['*Dashboard - Issue'] || '';
+    if (!issue || i === issue) {
+      const a = r['Parent Agency'] || r['agency_names'] || '';
+      if (a) agencySet.add(a);
+    }
+  }
+
+  // Issues visible when filtered by current agency selection
+  const issueSet = new Set();
   for (const r of all) {
     const a = r['Parent Agency'] || r['agency_names'] || '';
-    const i = r['Issue (OIRA Dashboard)'] || r['*Dashboard - Issue'] || '';
-    if (a) agencies.add(a);
-    if (i) issues.add(i);
+    if (!agency || a === agency) {
+      const i = r['Issue (OIRA Dashboard)'] || r['*Dashboard - Issue'] || '';
+      if (i) issueSet.add(i);
+    }
   }
+
   const ag = document.getElementById('agencyFilter');
   const is = document.getElementById('issueFilter');
   ag.innerHTML = '<option value="">All agencies</option>' +
-    [...agencies].sort().map(a => `<option value="${esc(a)}">${esc(a)}</option>`).join('');
+    [...agencySet].sort().map(a => `<option value="${esc(a)}"${a === agency ? ' selected' : ''}>${esc(a)}</option>`).join('');
   is.innerHTML = '<option value="">All issue areas</option>' +
-    [...issues].sort().map(i => `<option value="${esc(i)}">${esc(i)}</option>`).join('');
+    [...issueSet].sort().map(i => `<option value="${esc(i)}"${i === issue ? ' selected' : ''}>${esc(i)}</option>`).join('');
 }
 
 function applyFilters() {
@@ -452,6 +477,7 @@ function applyFilters() {
 
   filteredCfr = { open: fc(cfrRecords.open), closed: fc(cfrRecords.closed), final: fc(cfrRecords.final) };
   Object.keys(colExpanded).forEach(k => colExpanded[k] = false);
+  populateFilters();
   renderBoard();
 }
 
@@ -487,27 +513,35 @@ function renderBoard() {
   const done  = filteredRecords.filter(r => (r['OIRA_STATUS']||'').trim() === 'Completed')
     .sort((a,b) => parseDate(b['DATE_COMPLETED']) - parseDate(a['DATE_COMPLETED']));
 
-  function split(recs, field, cutoff) {
-    if (active) return { recent: recs, rest: [] };
-    const recent = [], rest = [];
-    for (const r of recs) {
-      const d = parseDate(r[field]);
-      (d && d >= cutoff ? recent : rest).push(r);
-    }
-    return { recent, rest };
+function split(recs, field, cutoff) {
+  if (active) return { recent: recs, rest: [] };
+  const recent = [], rest = [];
+  for (const r of recs) {
+    const d = parseDate(r[field]);
+    (d && d >= cutoff ? recent : rest).push(r);
   }
+  return { recent, rest };
+}
 
-  const batches = {
-    under:  split(under, 'DATE_RECEIVED',    yest),
-    done:   split(done,  'DATE_COMPLETED',   yest),
-    open:   split(filteredCfr.open,   'publication_date', today),
-    closed: split(filteredCfr.closed, 'publication_date', today),
-    final:  split(filteredCfr.final,  'publication_date', today),
-  };
-
+const oiraCutoff = today.getDay() === 1
+  ? new Date(today.getFullYear(), today.getMonth(), today.getDate() - 3)
+  : yest;
+const batches = {
+  under:  split(under, 'DATE_RECEIVED',    oiraCutoff),
+  done:   split(done,  'DATE_COMPLETED',   oiraCutoff),
+  open:   split(filteredCfr.open,   'publication_date', today),
+  closed: split(filteredCfr.closed, 'publication_date', today),
+  final:  split(filteredCfr.final,  'publication_date', today),
+};
   const totalF = filteredRecords.length + filteredCfr.open.length + filteredCfr.closed.length + filteredCfr.final.length;
   const totalA = allRecords.length + cfrRecords.open.length + cfrRecords.closed.length + cfrRecords.final.length;
-  document.getElementById('recordCount').innerHTML = `<strong>${totalF}</strong> of <strong>${totalA}</strong> records shown`;
+  const totalRecent = batches.under.recent.length + batches.done.recent.length +
+  batches.open.recent.length + batches.closed.recent.length + batches.final.recent.length;
+document.getElementById('recordCount').innerHTML = active
+  ? `<strong>${totalF}</strong> of <strong>${totalA}</strong> records shown`
+  : totalRecent < totalA
+  ? `<strong>${totalRecent}</strong> of <strong>${totalA}</strong> records shown`
+  : `<strong>${totalA}</strong> records`;
 
   document.getElementById('mainContent').innerHTML = '';
   document.getElementById('oira-board').innerHTML =
@@ -552,7 +586,7 @@ function oiraCard(r, type) {
   const completed = fmtDate(r['DATE_COMPLETED']);
   const du        = r['Days Under Review'];
   const ds        = r['Days Since Review Completed'] ?? r['Days Since Completed Review'];
-  const accent    = type === 'under' ? '#163d62' : '#2e7d5e';
+  const accent    = type === 'under' ? 'var(--c1)' : 'var(--c2)';
 
   let pill = '';
   if (type === 'under' && du != null)
@@ -570,14 +604,12 @@ function oiraCard(r, type) {
   return `<div class="card" style="--col-accent:${accent}" onclick="openModal('${r.id}')">
     <div class="card-inner">
       ${agency ? `<div class="card-agency-name">${agency}</div>` : ''}
-      <div class="card-top">
-        <div class="card-title">${title}</div>
-        ${stage ? `<div class="card-type-badge ${
-          stage.toLowerCase().includes('proposed') ? 'badge-proposed' :
-          stage.toLowerCase().includes('final') ? 'badge-final' :
-          stage.toLowerCase().includes('interim') ? 'badge-interim' : 'badge-notice'
-        }">${stage}</div>` : ''}
-      </div>
+      ${stage ? `<div class="card-type-badge ${
+        stage.toLowerCase().includes('proposed') ? 'badge-proposed' :
+        stage.toLowerCase().includes('final') ? 'badge-final' :
+        stage.toLowerCase().includes('interim') ? 'badge-interim' : 'badge-notice'
+      }">${stage}</div>` : ''}
+      <div class="card-title">${title}</div>
     </div>
     ${hasFooter ? `<div class="card-footer"><div class="card-dates">${dateItems}</div>${pill}</div>` : ''}
   </div>`;
@@ -589,8 +621,8 @@ function cfrCard(r, type) {
   const docType = esc(r['type'] || '');
   const pub     = fmtDate(r['publication_date']);
   const closeStr= fmtDate(r['comments_close_on']);
-  const accents = { open:'#b45309', closed:'#6b21a8', final:'#1e3a5f' };
-  const accent  = accents[type] || '#1e3a5f';
+  const accents = { open:'var(--c3)', closed:'var(--c4)', final:'var(--c5)' };
+  const accent  = accents[type] || 'var(--c5)';
 
   // Doc-type badge class
   const typeNorm = (docType||'').toLowerCase();
@@ -599,7 +631,7 @@ function cfrCard(r, type) {
                  : typeNorm.includes('interim')  ? 'badge-interim'
                  : 'badge-notice';
 
-  // Days until comments close
+  // Days until comments close (open column only)
   let closePill = '';
   if (type === 'open' && r['comments_close_on']) {
     const closeDate = parseDate(r['comments_close_on']);
@@ -608,17 +640,17 @@ function cfrCard(r, type) {
     closePill = `<div class="days-pill comments-close">${daysLeft} day${daysLeft !== 1 ? 's' : ''} until comments close</div>`;
   }
 
+  const closeLabel = type === 'closed' ? 'Comments Closed' : 'Comments Close';
+
   const pubItem   = pub     ? `<div class="card-date-row"><span class="date-label">Published</span><span class="date-val">${pub}</span></div>` : '';
-  const closeItem = closeStr ? `<div class="card-date-row"><span class="date-label">Comments Close</span><span class="date-val">${closeStr}</span></div>` : '';
+  const closeItem = closeStr ? `<div class="card-date-row"><span class="date-label">${closeLabel}</span><span class="date-val">${closeStr}</span></div>` : '';
   const hasFooter = pubItem || closeItem || closePill;
 
   return `<div class="card" style="--col-accent:${accent}" onclick="openCfrModal('${r.id}')">
     <div class="card-inner">
       ${agency ? `<div class="card-agency-name">${agency}</div>` : ''}
-      <div class="card-top">
-        <div class="card-title">${title}</div>
-        ${docType ? `<div class="card-type-badge ${badgeCls}">${docType}</div>` : ''}
-      </div>
+      ${docType ? `<div class="card-type-badge ${badgeCls}">${docType}</div>` : ''}
+      <div class="card-title">${title}</div>
     </div>
     ${hasFooter ? `<div class="card-footer"><div class="card-dates">${pubItem}${closeItem}</div>${closePill}</div>` : ''}
   </div>`;
@@ -637,11 +669,15 @@ function openModal(id) {
   const dTxt    = du != null ? `${du} days under review` : ds != null ? `${ds} days since completed` : '';
   const ua      = (r['Unified Agenda?'] || r['Unified Agenda'] || '').trim();
   const uaLink  = r['Unified Agenda Link'] || '';
-  const uaSec   = ua === 'No'
-    ? `<div class="modal-ua-notice modal-ua-no">Not included in the Unified Regulatory Agenda</div>`
-    : ua === 'Yes' && uaLink
-    ? `<div class="modal-facts"><div class="modal-fact"><span class="modal-fact-key">Unified Agenda</span><span class="modal-fact-val"><a href="${esc(uaLink)}" target="_blank" rel="noopener">${esc(uaLink)}</a></span></div></div>`
-    : '';
+ const uaAbstract = r['Unified Agenda Abstract'] || '';
+const uaSec   = ua === 'No'
+  ? `<div class="modal-ua-notice modal-ua-no">Not included in the Unified Regulatory Agenda</div>`
+  : ua === 'Yes' && uaLink
+  ? `<div class="modal-facts">
+      <div class="modal-fact"><span class="modal-fact-key">Unified Agenda Link</span><span class="modal-fact-val"><a href="${esc(uaLink)}" target="_blank" rel="noopener">${esc(uaLink)}</a></span></div>
+      ${uaAbstract ? `<div class="modal-fact"><span class="modal-fact-key">Abstract</span><span class="modal-fact-val">${esc(uaAbstract)}</span></div>` : ''}
+    </div>`
+  : '';
 
   document.getElementById('modalContent').innerHTML = `
     <div class="modal-header">
