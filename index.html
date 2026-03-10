@@ -669,11 +669,15 @@ function openModal(id) {
   const dTxt    = du != null ? `${du} days under review` : ds != null ? `${ds} days since completed` : '';
   const ua      = (r['Unified Agenda?'] || r['Unified Agenda'] || '').trim();
   const uaLink  = r['Unified Agenda Link'] || '';
-  const uaSec   = ua === 'No'
-    ? `<div class="modal-ua-notice modal-ua-no">Not included in the Unified Regulatory Agenda</div>`
-    : ua === 'Yes' && uaLink
-    ? `<div class="modal-facts"><div class="modal-fact"><span class="modal-fact-key">Unified Agenda</span><span class="modal-fact-val"><a href="${esc(uaLink)}" target="_blank" rel="noopener">${esc(uaLink)}</a></span></div></div>`
-    : '';
+ const uaAbstract = r['Unified Agenda Abstract'] || '';
+const uaSec   = ua === 'No'
+  ? `<div class="modal-ua-notice modal-ua-no">Not included in the Unified Regulatory Agenda</div>`
+  : ua === 'Yes' && uaLink
+  ? `<div class="modal-facts">
+      <div class="modal-fact"><span class="modal-fact-key">Unified Agenda Link</span><span class="modal-fact-val"><a href="${esc(uaLink)}" target="_blank" rel="noopener">${esc(uaLink)}</a></span></div>
+      ${uaAbstract ? `<div class="modal-fact"><span class="modal-fact-key">Abstract</span><span class="modal-fact-val">${esc(uaAbstract)}</span></div>` : ''}
+    </div>`
+  : '';
 
   document.getElementById('modalContent').innerHTML = `
     <div class="modal-header">
