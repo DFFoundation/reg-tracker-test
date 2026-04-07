@@ -30,6 +30,7 @@
   .header-title{font-size:16px;font-weight:700;color:#fff;letter-spacing:.01em;text-transform:uppercase;flex:1}
   .logo-divider{width:1px;height:18px;background:rgba(255,255,255,.2);flex-shrink:0}
   .header-updated{font-size:11px;font-weight:400;color:rgba(255,255,255,.45);letter-spacing:.02em;white-space:nowrap}
+  .about-btn{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);letter-spacing:.04em;text-transform:uppercase;text-decoration:none;border:1px solid rgba(255,255,255,.25);border-radius:4px;padding:4px 10px;white-space:nowrap;transition:all .15s;background:none;cursor:pointer;font-family:'Inter',sans-serif}.about-btn:hover{color:#fff;border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.08)}
   .contact-btn{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);letter-spacing:.04em;text-transform:uppercase;text-decoration:none;border:1px solid rgba(255,255,255,.25);border-radius:4px;padding:4px 10px;white-space:nowrap;transition:all .15s}.contact-btn:hover{color:#fff;border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.08)}
   .config-btn{background:var(--df-green);border:none;border-radius:4px;color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:6px 16px;cursor:pointer;letter-spacing:.03em;transition:background .15s;white-space:nowrap}
   .config-btn:hover{background:#256b50}.config-btn:disabled{opacity:.5;cursor:not-allowed}
@@ -66,10 +67,11 @@
   .panel.collapsed .panel-label{writing-mode:vertical-rl;transform:rotate(180deg);font-size:10px;letter-spacing:.12em;white-space:nowrap}
   .panel-header{display:flex;align-items:center;justify-content:space-between;padding:11px 18px;cursor:pointer;user-select:none;border-bottom:1px solid rgba(0,0,0,.08);background:rgba(255,255,255,.5);gap:8px;flex-shrink:0;transition:background .15s}
   .panel-header:hover{background:rgba(255,255,255,.72)}
-  .panel-header:hover .panel-collapse-hint{opacity:1}
+  /* collapse hint always visible, slightly faded, brightens on hover */
+  .panel-collapse-hint{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:500;color:var(--text-tertiary);opacity:.45;transition:opacity .2s;flex-shrink:0;white-space:nowrap}
+  .panel-header:hover .panel-collapse-hint{opacity:.85}
   .panel.collapsed .panel-collapse-hint{display:none}
   .panel-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--df-navy);font-family:'Inter',sans-serif}
-  .panel-collapse-hint{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:500;color:var(--text-tertiary);opacity:0;transition:opacity .2s;flex-shrink:0;white-space:nowrap}
   .panel-chevron{font-size:10px;color:var(--text-tertiary);transition:transform .25s;flex-shrink:0}
   .panel.collapsed .panel-header::after{content:'▶';font-size:10px;color:var(--text-tertiary);opacity:1}
   .panel-body{display:flex;flex-direction:column}
@@ -96,7 +98,8 @@
   .card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--col-accent,var(--df-green));border-radius:6px 0 0 6px}
   .card:hover{box-shadow:0 4px 16px rgba(19,36,72,.13);border-color:var(--border-dark);transform:translateY(-1px)}
   .card-inner{padding:14px 14px 12px 18px;display:flex;flex-direction:column;gap:5px}
-  .card-agency-name{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#163d62;margin-bottom:2px;line-height:1.4;white-space:normal;word-break:break-word;overflow-wrap:break-word}
+  /* CHANGE: agency name font size increased from 11px to 13px */
+  .card-agency-name{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#163d62;margin-bottom:2px;line-height:1.4;white-space:normal;word-break:break-word;overflow-wrap:break-word}
   .card-type-badge{display:inline-flex;align-items:center;font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;align-self:flex-start;margin-bottom:3px}
   .badge-proposed{background:var(--badge-proposed-bg);color:var(--badge-proposed-fg)}
   .badge-final{background:var(--badge-final-bg);color:var(--badge-final-fg)}
@@ -155,6 +158,17 @@
   .modal-abstract-title{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:4px}
   .modal-abstract-helper{font-size:11px;color:var(--text-tertiary);font-style:italic;margin-bottom:8px}
   .modal-abstract-text{font-size:13.5px;line-height:1.7;color:var(--text-secondary);border-left:3px solid var(--df-green);padding:10px 16px;background:var(--df-green-light);border-radius:0 4px 4px 0}
+  /* About page overlay */
+  .about-overlay{position:fixed;inset:0;background:rgba(19,36,72,.55);backdrop-filter:blur(2px);z-index:300;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;transition:opacity .2s;pointer-events:none}
+  .about-overlay.open{opacity:1;pointer-events:all}
+  .about-modal{background:var(--surface);border-radius:8px;max-width:520px;width:100%;max-height:80vh;overflow-y:auto;transform:translateY(10px);transition:transform .2s;box-shadow:0 20px 60px rgba(19,36,72,.22)}
+  .about-overlay.open .about-modal{transform:translateY(0)}
+  .about-header{background:var(--df-navy);border-radius:8px 8px 0 0;padding:22px 26px 20px;display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+  .about-header h2{font-family:'Source Serif 4',serif;font-size:18px;font-weight:400;color:#fff}
+  .about-body{padding:28px 26px 32px;font-size:14px;line-height:1.75;color:var(--text-secondary)}
+  .about-body p{margin-bottom:12px}
+  .about-body p:last-child{margin-bottom:0}
+  .about-placeholder{font-style:italic;color:var(--text-tertiary);border:1px dashed var(--border-dark);border-radius:6px;padding:24px;text-align:center;margin-top:8px}
 </style>
 </head>
 <body>
@@ -163,6 +177,7 @@
   <div class="header-title">Regulatory Activity Tracker</div>
   <div class="logo-divider"></div>
   <div class="header-updated" id="headerUpdated"></div>
+  <button class="about-btn" onclick="openAbout()">About</button>
   <a class="contact-btn" href="mailto:rulemaking@democracyforward.org">Contact Us</a>
   <button class="config-btn" id="loadBtn" onclick="loadData()">&#8635; Refresh</button>
 </div>
@@ -258,6 +273,19 @@
   <div class="modal" id="modalContent"></div>
 </div>
 
+<!-- About overlay -->
+<div class="about-overlay" id="aboutOverlay" onclick="closeAbout(event)">
+  <div class="about-modal">
+    <div class="about-header">
+      <h2>About This Tracker</h2>
+      <button class="modal-close" onclick="closeAboutBtn()">&times; Close</button>
+    </div>
+    <div class="about-body">
+      <div class="about-placeholder">About page content coming soon.</div>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── STATE ──────────────────────────────────────────────────────────
 let allRecords = [];
@@ -293,6 +321,8 @@ function fmtDate(d) {
   const dt = parseDate(d);
   return dt ? dt.toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }) : null;
 }
+// CHANGE: helper for singular/plural "day"
+function dayStr(n) { return n === 1 ? 'day' : 'days'; }
 
 // ── FETCH ──────────────────────────────────────────────────────────
 async function fetchAllRecords(apiKey, baseId, tableName, filterFormula) {
@@ -537,8 +567,17 @@ function renderBoard() {
     final:  split(filteredCfr.final,  'publication_date', today),
   };
 
-  const totalF = filteredRecords.length + filteredCfr.open.length + filteredCfr.closed.length + filteredCfr.final.length;
+  // CHANGE: record count uses total visible records (recent + rest) when expanded
+  const visibleOira = (colExpanded.under ? under.length : batches.under.recent.length) +
+                      (colExpanded.done  ? done.length  : batches.done.recent.length);
+  const visibleCfr  = (colExpanded.open   ? filteredCfr.open.length   : batches.open.recent.length) +
+                      (colExpanded.closed ? filteredCfr.closed.length : batches.closed.recent.length) +
+                      (colExpanded.final  ? filteredCfr.final.length  : batches.final.recent.length);
+  const totalVisible = visibleOira + visibleCfr;
+
   const totalA = allRecords.length + cfrRecords.open.length + cfrRecords.closed.length + cfrRecords.final.length;
+  const totalF = filteredRecords.length + filteredCfr.open.length + filteredCfr.closed.length + filteredCfr.final.length;
+
   const totalRecent = batches.under.recent.length + batches.done.recent.length +
     batches.open.recent.length + batches.closed.recent.length + batches.final.recent.length;
 
@@ -546,7 +585,7 @@ function renderBoard() {
   document.getElementById('recordCount').innerHTML = active
     ? `<strong>${totalF}</strong> of <strong>${totalA}</strong> records shown`
     : (digestMode && totalRecent < totalA)
-    ? `<strong>${totalRecent}</strong> of <strong>${totalA}</strong> records shown`
+    ? `<strong>${totalVisible}</strong> of <strong>${totalA}</strong> records shown`
     : `<strong>${totalA}</strong> records`;
 
   const elems = ['mainContent','oira-board','cfr-board','recordCount'];
@@ -598,11 +637,12 @@ function oiraCard(r, type) {
   const ds        = r['Days Since Review Completed'] ?? r['Days Since Completed Review'];
   const accent    = type === 'under' ? 'var(--c1)' : 'var(--c2)';
 
+  // CHANGE: singular/plural "day"
   let pill = '';
   if (type === 'under' && du != null)
-    pill = `<div class="days-pill under-review">${du} days under review</div>`;
+    pill = `<div class="days-pill under-review">${du} ${dayStr(du)} under review</div>`;
   else if (type === 'done' && ds != null)
-    pill = `<div class="days-pill since-complete">${ds} days since review completed</div>`;
+    pill = `<div class="days-pill since-complete">${ds} ${dayStr(ds)} since review completed</div>`;
 
   const dateItems = [
     received  ? `<div class="card-date-row"><span class="date-label">Received</span><span class="date-val">${received}</span></div>` : '',
@@ -638,12 +678,13 @@ function cfrCard(r, type) {
                  : typeNorm.includes('interim')  ? 'badge-interim'
                  : 'badge-notice';
 
+  // CHANGE: singular/plural "day"
   let closePill = '';
   if (type === 'open' && r['comments_close_on']) {
     const closeDate = parseDate(r['comments_close_on']);
     const today = new Date(); today.setHours(0,0,0,0);
     const daysLeft = Math.round((closeDate - today) / 86400000);
-    closePill = `<div class="days-pill comments-close">${daysLeft} day${daysLeft !== 1 ? 's' : ''} until comments close</div>`;
+    closePill = `<div class="days-pill comments-close">${daysLeft} ${dayStr(daysLeft)} until comments close</div>`;
   }
 
   const closeLabel = type === 'closed' ? 'Comments Closed' : 'Comments Close';
@@ -671,7 +712,8 @@ function openModal(id) {
   const stage  = r['STAGE'] || r['Stage'] || '';
   const sCls   = status === 'Completed' ? 'status-done' : 'status-under';
   const dCls   = du != null && du > 90 ? 'days-long' : du != null ? 'days-under' : 'days-complete';
-  const dTxt   = du != null ? `${du} days under review` : ds != null ? `${ds} days since completed` : '';
+  // CHANGE: singular/plural in modal pills
+  const dTxt   = du != null ? `${du} ${dayStr(du)} under review` : ds != null ? `${ds} ${dayStr(ds)} since completed` : '';
   const ua     = (r['Unified Agenda?'] || r['Unified Agenda'] || '').trim();
   const uaLink = r['Unified Agenda Link'] || '';
   const uaAbstract = r['Unified Agenda Abstract'] || '';
@@ -746,6 +788,18 @@ function closeModal(e) {
 }
 function closeModalBtn() {
   document.getElementById('modalOverlay').classList.remove('open');
+}
+
+// ── ABOUT ──────────────────────────────────────────────────────────
+function openAbout() {
+  document.getElementById('aboutOverlay').classList.add('open');
+}
+function closeAbout(e) {
+  if (e.target === document.getElementById('aboutOverlay'))
+    document.getElementById('aboutOverlay').classList.remove('open');
+}
+function closeAboutBtn() {
+  document.getElementById('aboutOverlay').classList.remove('open');
 }
 
 // ── MISC ───────────────────────────────────────────────────────────
